@@ -4,6 +4,7 @@ also_reload("lib/**/*.rb")
 require("./lib/category")
 require("./lib/expense")
 require("pg")
+require("pry")
 
 DB = PG.connect({:dbname => "expense_organizer"})
 
@@ -43,23 +44,14 @@ post("/expenses") do
 end
 
 post("/categories/:id") do
-  id = params['id'].to_i()
-  associated_expense = Expense.find(id)
 
   erb(:categories)
 end
-#
-# post("/lines/:line_id") do
-#   line_id = params.fetch('line_id').to_i()
-#   station_id = params.fetch('station_id').to_i()
-#   line = Line.find(line_id)
-#   station = Station.find(station_id)
-#   station.add_line(line)
-#   url = "/admin/lines/" + line_id.to_s()
-#   redirect(url)
-# end
 
 post("/expenses/:id") do
-
+  id = params['id'].to_i()
+  category_id = params["category_id"]
+  category = Category.find(category_id)
+  category.add_expense_to_category(@expense)
   erb(:expenses)
 end
